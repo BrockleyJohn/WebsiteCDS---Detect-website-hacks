@@ -39,6 +39,13 @@
 $scanPassword = "ChangeThisPasswordForSecurity";
 
 /** 
+ * Exclude Directory List - 
+ * Separate each entry with a semicolon ; 
+ * Relative path from start directory. [CASE INSENSITIVE]
+ */ 
+$excludeDirList = "backup;working/temp;"; 
+
+/** 
  * Exclude File List - Important do not exclude files like PHP, ASP, JS, HTML etc
  * Seperate each entry with a semicolon ; 
  * Full filename including extension. [CASE INSENSITIVE]
@@ -74,7 +81,7 @@ if (!function_exists("stripos")) {
  * @param $excludeExtensionList - List of extensions to exclude from scan  
  * @return Final MD5 of all files scanned.
  */ 
-function getMD5Hash($dir, $excludeFileList, $excludeExtensionList)
+function getMD5Hash($dir, $excludeDirList, $excludeFileList, $excludeExtensionList)
 {
     if (!is_dir($dir))
     {
@@ -90,7 +97,10 @@ function getMD5Hash($dir, $excludeFileList, $excludeExtensionList)
         {
              if (is_dir($dir.'/'.$entry))
              {
-                 $fileMD5list[] = getMD5Hash($dir.'/'.$entry, $excludeFileList, $excludeExtensionList);
+                 if (stripos( $excludeDirList, $dir.'/'.$entry ) === false ) //dont scan dirs in exclude list
+		 {
+		     $fileMD5list[] = getMD5Hash($dir.'/'.$entry, $excludeFileList, $excludeExtensionList);
+		 }
              }
              else
              {
