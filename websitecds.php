@@ -99,7 +99,7 @@ function getMD5Hash($dir, $excludeDirList, $excludeFileList, $excludeExtensionLi
              {
                  if (stripos( $excludeDirList, $dir.'/'.$entry ) === false ) //dont scan dirs in exclude list
 		 {
-		     $fileMD5list[] = getMD5Hash($dir.'/'.$entry, $excludeFileList, $excludeExtensionList);
+		     $fileMD5list[] = getMD5Hash($dir.'/'.$entry, $excludeDirList, $excludeFileList, $excludeExtensionList);
 		 }
              }
              else
@@ -142,7 +142,7 @@ function getMD5Hash($dir, $excludeDirList, $excludeFileList, $excludeExtensionLi
 	if( $_REQUEST["myhash"] == "")
 	{
 		//make the hash and send to user
-		$hashGenerated = getMD5Hash(".", $excludeFileList, $excludeExtensionList);
+		$hashGenerated = getMD5Hash(".", $excludeDirList, $excludeFileList, $excludeExtensionList);
 		echo "Current HASH:$hashGenerated";
 		echo "<BR>Please use above with myhash get parameter in the next call if you want email alerts";
 		exit(0);			
@@ -152,7 +152,7 @@ function getMD5Hash($dir, $excludeDirList, $excludeFileList, $excludeExtensionLi
 //STEP 3 - If user has sent hash then compare with a new hash 
 //         If the values are different then raise an ALARM
 
-	$hashGenerated = getMD5Hash(".", $excludeFileList, $excludeExtensionList);
+	$hashGenerated = getMD5Hash(".", $excludeDirList, $excludeFileList, $excludeExtensionList);
 
 	if( strcmp ( $_REQUEST["myhash"], $hashGenerated )  != 0 )
 	{
